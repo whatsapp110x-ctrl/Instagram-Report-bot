@@ -1,3 +1,4 @@
+from keep_alive import keep_alive
 import os
 import sys
 import random
@@ -275,6 +276,16 @@ if __name__ == "__main__":
     print("Starting the bot...")
     logging.info("Bot started.")
     
-    # Start the bot polling in a separate thread
-    t = Thread(target=bot.polling)
-    t.start()
+    # Start bot in a thread-safe and auto-restart way
+from keep_alive import keep_alive
+from threading import Thread
+
+keep_alive()
+
+def run_bot():
+    bot.infinity_polling(timeout=60, long_polling_timeout = 10)
+
+if __name__ == "__main__":
+    print("Starting the bot...")
+    logging.info("Bot started.")
+    Thread(target=run_bot).start()
