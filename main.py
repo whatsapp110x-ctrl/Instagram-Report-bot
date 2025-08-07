@@ -1,9 +1,5 @@
-import telebot
-
-bot = telebot.TeleBot("YOUR_BOT_TOKEN")
-bot.remove_webhook()
-bot.polling()
 from keep_alive import keep_alive
+keep_alive()
 import os
 import sys
 import random
@@ -281,18 +277,12 @@ if __name__ == "__main__":
     print("Starting the bot...")
     logging.info("Bot started.")
     
-    # Start bot in a thread-safe and auto-restart way
-from keep_alive import keep_alive
-from threading import Thread
-
-keep_alive()
-
-def run_bot():
-    bot.infinity_polling(timeout=60, long_polling_timeout = 10)
-
-
-if __name__ == '__main__':
     try:
-        bot.polling(none_stop=True)
+        # Safe polling with reconnect and thread
+        bot.infinity_polling(
+            timeout=10,
+            long_polling_timeout=5
+        )
     except Exception as e:
-        print("Error:", e)
+        logging.error(f"Bot polling crashed: {e}")
+        sys.exit()
